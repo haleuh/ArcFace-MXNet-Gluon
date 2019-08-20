@@ -76,7 +76,7 @@ def train():
 
     # Define metric losses
     metric_ce_loss = mx.metric.Loss('CE-Loss')
-    best_acc = 0.8  # only save the model if the accuracy is better than 0.8
+    best_acc = 80  # only save the model if the accuracy is better than 80%
     # Start training
     print('Start to train {}...'.format(args.prefix))
     start_epoch = cur_iter // iterations_per_epoch
