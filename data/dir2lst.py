@@ -24,7 +24,8 @@ def list_image(root, exts=('.jpg', '.jpeg', '.png', '.bmp')):
                 yield out
                 i += 1
                 if i % 1000 == 0:
-                    print('Listed {} images'.format(i))
+                    print('Listed {} images'.format(i), end='\r')
+    print('Listed {} images'.format(i))
 
 
 def main():
