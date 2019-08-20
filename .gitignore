@@ -1,4 +1,5 @@
 /.idea/
+/runs/
 /shared/PRNet/net-data/256_256_resfcn256_weight.data-00000-of-00001
 /shared/MMOD/mmod_human_face_detector.dat
 *.pyc

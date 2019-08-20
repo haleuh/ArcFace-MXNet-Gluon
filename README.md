@@ -87,6 +87,12 @@ and unpack it to a directory, e.g., **/mnt/Datasets/lfw/images**
   <!-- .element height="50%" width="50%" -->
   
 ## Training
++ Training ArcFace with Glint dataset using 8 GPUs
+  ```bash
+  python ArcFace/train.py --gpus 0,1,2,3,4,5,6,7 --num_workers 28 --prefix arcface-glint-nocolor --num_classes 180855
+   --train_rec /mnt/Datasets/Glint/glint_dlib_prnet.rec
+   --test_rec /mnt/Datasets/lfw/lfw_dlib_prnet.rec
+  ```
 ## Testing
 ## Licence
 + Our code is released under MIT License.
