@@ -16,13 +16,14 @@ from data import read_list, write_list
 def progress_bar(data, func, num_processes=1):
     if num_processes == 1:
         for i, x in enumerate(map(func, data), 1):
-            print('Done {0:%}'.format(i / len(data)), end='\r')
+            print('Done {0:.0%}'.format(i / len(data)), end='\r')
             yield x
     else:
         with Pool(num_processes) as p:
             for i, x in enumerate(p.imap(func, data), 1):
-                print('Done {0:%}'.format(i / len(data)), end='\r')
+                print('Done {0:.0%}'.format(i / len(data)), end='\r')
                 yield x
+    print('Done 100%')
 
 
 def detect_face(image_list):
