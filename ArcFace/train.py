@@ -105,10 +105,7 @@ def train():
                 elapsed_time = timeit.default_timer() - start_time
                 scout = helper.print_scalars(OrderedDict([metric_ce_loss.get()]),
                                              cur_epoch, batch_idx, elapsed_time)
-                if batch_idx == iterations_per_epoch - 1:
-                    logger.info(scout)
-                else:
-                    print(scout)
+                logger.info(scout)
                 start_time = timeit.default_timer()
                 metric_ce_loss.reset()
 
