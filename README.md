@@ -85,6 +85,9 @@ and unpack it to a directory, e.g., **/mnt/Datasets/lfw/images**
   ```
   ![lfw sample data](docs/lfw-sample-data.png)
   <!-- .element height="50%" width="50%" -->
+  
+## Training
+## Testing
 ## Licence
 + Our code is released under MIT License.
 ## Credits
