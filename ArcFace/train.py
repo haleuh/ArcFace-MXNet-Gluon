@@ -17,7 +17,7 @@ from mxnet.gluon.data.vision import ImageRecordDataset, transforms
 from utils import helper
 from ArcFace.resnet import resnet100
 from ArcFace.transforms import ToTensor
-from ArcFace.test import test_lfw
+from ArcFace.test import eval_lfw
 
 
 def train():
@@ -112,7 +112,7 @@ def train():
             if (batch_idx % args.test_interval == 0) or (batch_idx == iterations_per_epoch - 1):
                 # if batch_idx > 0: break
                 start_time = timeit.default_timer()
-                mu, std, t = test_lfw(inference.features, args.test_rec, test_loader, ctx)
+                mu, std, t, _ = eval_lfw(inference.features, args.test_rec, test_loader, ctx)
                 elapsed_time = timeit.default_timer() - start_time
                 if mu >= best_acc:
                     best_acc = mu
