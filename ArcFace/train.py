@@ -114,7 +114,7 @@ def train():
                 start_time = timeit.default_timer()
                 mu, std, t, _ = eval_lfw(inference.features, args.test_rec, test_loader, ctx)
                 elapsed_time = timeit.default_timer() - start_time
-                if mu >= best_acc:
+                if mu > best_acc:
                     best_acc = mu
                     # Save trained model
                     logger.info('Find better model at E: {}, B: {}, I: {}'.format(cur_epoch, batch_idx, cur_iter))
