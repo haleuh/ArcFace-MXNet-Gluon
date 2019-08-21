@@ -117,7 +117,7 @@ def train():
                 if mu >= best_acc:
                     best_acc = mu
                     # Save trained model
-                    logger.info('Find better model at epoch {}, batch {}'.format(cur_epoch, batch_idx))
+                    logger.info('Find better model at E: {}, B: {}, I: {}'.format(cur_epoch, batch_idx, cur_iter))
                     helper.save_params(inference, args.ckpt_dir, cur_iter, prefix=args.prefix + '-best')
                 scout = helper.print_scalars(OrderedDict([('mu', mu), ('std', std), ('t', t)]),
                                              cur_epoch, batch_idx, elapsed_time)

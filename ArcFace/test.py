@@ -69,7 +69,7 @@ def evaluate():
 
     # Test LFW
     if args.test_name.lower() == 'lfw':
-        print('Evaluating LFW')
+        print('Evaluating LFW...')
         start_time = timeit.default_timer()
         mu, std, t, accuracies = eval_lfw(inference.features, args.test_rec, test_loader, ctx)
         elapsed_time = timeit.default_timer() - start_time
