@@ -100,12 +100,11 @@ if __name__ == '__main__':
     parser.add_argument('--margin_b', default=0.2, type=float, help='margin for cosineface loss')
 
     parser.add_argument('--batch_size', default=64, type=int, help='batch size')
-    parser.add_argument('--resume', action='store_true')
 
     args = parser.parse_args()
 
     # Output directories
-    args.log_dir, args.ckpt_dir = helper.create_output_dirs(args.output_dir, args.prefix, args.resume)
+    args.log_dir, args.ckpt_dir = helper.create_output_dirs(args.output_dir, args.prefix)
     logger = helper.create_logger(args.log_dir, args.prefix)
     logger.info(args)
 
