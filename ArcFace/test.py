@@ -59,19 +59,27 @@ def evaluate():
                              num_workers=args.num_workers, pin_memory=True)
 
     logger.info('Evaluate model {}'.format(os.path.basename(args.model)))
-    # Create inference
-    inference = resnet100(args.num_classes, emb_size=args.emb_size,
-                          s=args.margin_s, a=args.margin_a, m=args.margin_m, b=args.margin_b)
-    inference.hybridize(static_alloc=True, static_shape=True)
-
-    # Load inference params
-    helper.load_params(inference, args.model, ctx=ctx)
+    if args.model.endswith('.params'):
+        # Create inference
+        inference = resnet100(args.num_classes, emb_size=args.emb_size,
+                              s=args.margin_s, a=args.margin_a, m=args.margin_m, b=args.margin_b)
+        inference.hybridize(static_alloc=True, static_shape=True)
+        helper.load_params(inference, args.model, ctx=ctx)
+        inference = inference.features
+    elif args.model.endswith('-symbol.json'):
+        # Load model symbol and params
+        sym = mx.sym.load_json(open(args.model, 'r').read())
+        inference = gluon.nn.SymbolBlock(outputs=sym, inputs=mx.sym.var('data'))
+        inference.load_parameters(args.model[:-11] + '0000.params', ctx=ctx)
+    else:
+        print('Incorrect model: {}'.format(args.model))
+        return
 
     # Test LFW
     if args.test_name.lower() == 'lfw':
         print('Evaluating LFW...')
         start_time = timeit.default_timer()
-        mu, std, t, accuracies = eval_lfw(inference.features, args.test_rec, test_loader, ctx)
+        mu, std, t, accuracies = eval_lfw(inference, args.test_rec, test_loader, ctx)
         elapsed_time = timeit.default_timer() - start_time
         scout = helper.print_scalars(OrderedDict([('mu', mu), ('std', std), ('t', t)]), 0, 0, elapsed_time)
         logger.info(scout)
@@ -87,7 +95,7 @@ if __name__ == '__main__':
     # output
     parser.add_argument('--output_dir', default='runs', help='output directory')
     parser.add_argument('--prefix', default='arcface', help='prefix')
-    parser.add_argument('--model', default='shared/ArcFace/arcface-glint-nocolor-best-337551.params',
+    parser.add_argument('--model', default='shared/ArcFace/arcface-glint-nocolor-symbol.json',
                         help='pretrained model')
     parser.add_argument('--test_name', default='lfw', help='name of the test set')
     parser.add_argument('--test_rec', default='/mnt/Datasets/lfw/lfw_dlib_prnet.rec', help='test record')
