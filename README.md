@@ -93,7 +93,26 @@ and unpack it to a directory, e.g., **/mnt/Datasets/lfw/images**
    --train_rec /mnt/Datasets/Glint/glint_dlib_prnet.rec
    --test_rec /mnt/Datasets/lfw/lfw_dlib_prnet.rec
   ```
++ Export trained model (optional)
+  ```bash
+  python ArcFace/export.py 
+   --model shared/ArcFace/arcface-glint-nocolor-best-337551.params
+   --output shared/ArcFace/arcface-glint-nocolor
+  ```
 ## Testing
++ Testing ArcFace with LFW dataset
+  ```bash
+  python ArcFace/test.py --prefix arcface-glint-nocolor
+   --model shared/ArcFace/arcface-glint-nocolor-symbol.json
+   --test_rec /mnt/Datasets/lfw/lfw_dlib_prnet.rec
+  ```
+## Pretrained Models
++ [Arcface-Glint](https://www.dropbox.com/s/7sx6ntpkuadufpm/ArcFace-Glint.zip?dl=0)
+
+  | Test set | Accuracy |
+  |:--------:|:--------:|
+  | LFW |  99.85 ± 0.22 |
+  
 ## Licence
 + Our code is released under MIT License.
 ## Credits
