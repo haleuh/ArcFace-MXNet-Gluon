@@ -48,13 +48,13 @@ def load_params(inference, ckpt, prefix='ckpt', init=mx.initializer.Uniform(), c
     if os.path.isfile(ckpt):
         inference.initialize(init=init, ctx=ctx)
         print('Loading checkpoint at: {}'.format(ckpt))
-        inference.load_parameters(ckpt, ctx=ctx, allow_missing=True, ignore_extra=True)
+        inference.load_parameters(ckpt, ctx=ctx, allow_missing=False, ignore_extra=False)
         return 0
     elif os.path.isdir(ckpt):
         params = sorted(glob(os.path.join(ckpt, '{}-*.params'.format(prefix))), key=os.path.getmtime)
         if len(params):
             print('Loading checkpoint at: {}'.format(params[-1]))
-            inference.load_parameters(params[-1], ctx=ctx)
+            inference.load_parameters(params[-1], ctx=ctx, allow_missing=False, ignore_extra=False)
             epoch = int(os.path.basename(params[-1])[:-7].split('-')[-1])
             return epoch
     print('No checkpoint found! Randomly initialize params...')
