@@ -31,11 +31,11 @@ if __name__ == '__main__':
     parser.add_argument('--output', default='shared/ArcFace/arcface-glint-nocolor', help='output model')
     parser.add_argument('--model', default='shared/ArcFace/arcface-glint-nocolor-best-337551.params',
                         help='pretrained model')
-    parser.add_argument('--img_size', default='3,112,112', type=str, help='image size')
+    parser.add_argument('--img_size', default='112,112', type=str, help='image size')
     parser.add_argument('--emb_size', default=512, type=int, help='embedding size')
     parser.add_argument('--num_classes', default=180855, type=int, help='number of classes')
 
     args = parser.parse_args()
-    args.img_size = [1] + list(map(int, args.img_size.split(',')))
+    args.img_size = [1, 3] + list(map(int, args.img_size.split(',')))
 
     export()
