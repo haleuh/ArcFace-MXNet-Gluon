@@ -36,7 +36,7 @@ def read_lfw_pairs(pair_list_path):
     return img_list1, img_list2, labels
 
 
-def create_lfw_pairs(data_dir, lst_file):
+def convert_lfw_pairs_to_indices(data_dir, lst_file):
     lst_path = os.path.join(data_dir, lst_file)
     lst = read_lst(lst_path)
     pair_list_path = os.path.join(data_dir, 'pairs.txt')
@@ -63,4 +63,4 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--list', default='', help='image list')
     parser.add_argument('-i', '--input', default='', help='path to the dataset directory')
     args = parser.parse_args()
-    create_lfw_pairs(args.input, args.list)
+    convert_lfw_pairs_to_indices(args.input, args.list)
