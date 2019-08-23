@@ -77,7 +77,7 @@ and unpack it to a directory, e.g., **/mnt/Datasets/lfw/images**
   # Run face2rec to create a record file for mxnet
   python data/face2rec.py /mnt/Datasets/lfw/lfw_dlib_prnet /mnt/Datasets/lfw/images --pack-label --num-thread 8
   # Map the original pairs.txt to new indexes in the list file
-  python data/create_pairs.py -d lfw -l lfw_dlib_prnet.lst -i /mnt/Datasets/lfw
+  python data/lfw2indices.py -l lfw_dlib_prnet.lst -i /mnt/Datasets/lfw
   ```
 + Visualize the record
   ```bash
