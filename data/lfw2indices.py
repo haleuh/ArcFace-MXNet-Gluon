@@ -58,17 +58,9 @@ def create_lfw_pairs(data_dir, lst_file):
     np.savetxt(new_pair_path, new_pairs, fmt='%s')
 
 
-def main():
-    if args.dataset == 'lfw':
-        create_lfw_pairs(args.input, args.list)
-    else:
-        print('Not support dataset {}'.format(args.dataset))
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--dataset', default='lfw', help='lfw')
     parser.add_argument('-l', '--list', default='', help='image list')
     parser.add_argument('-i', '--input', default='', help='path to the dataset directory')
     args = parser.parse_args()
-    main()
+    create_lfw_pairs(args.input, args.list)
