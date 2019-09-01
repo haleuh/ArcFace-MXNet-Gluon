@@ -97,8 +97,10 @@ def evaluate():
         print('Show LFW failure pairs...')
         fail_indices, fail_sim = top_failure_pairs_lfw(inference, args.test_rec, test_loader, ctx)
         images = mx.nd.stack(*[test_dataset[idx][0] for idx in fail_indices])
-        show_images(images, ncols=4)
-        logger.info(' '.join('{:.2f}'.format(x) for x in fail_sim))
+        fail_sim_str = ['{:.2f}'.format(x) for x in fail_sim]
+        show_images(images[:8], titles=[''] * 4 + fail_sim_str[:4], ncols=4)
+        show_images(images[8:], titles=[''] * 4 + fail_sim_str[4:], ncols=4)
+        logger.info(' '.join(fail_sim_str))
 
 
 if __name__ == '__main__':
