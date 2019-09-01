@@ -2,6 +2,32 @@ import numpy as np
 from scipy.spatial.distance import cosine
 
 
+def top_k_failure_pairs(pair_file, features1, features2=None, k=4):
+    if features2 is None:
+        features2 = features1
+    # Read pairs and labels
+    pairs = np.loadtxt(pair_file, dtype=int)
+    f1 = pairs[:, 0]
+    f2 = pairs[:, 1]
+    labels = pairs[:, 2]
+    # Compare feature pairs
+    sim = compare_pairs(features1[f1, :], features2[f2, :])
+    # Negative pairs
+    neg_idx = labels == 0
+    neg_pairs = pairs[neg_idx, :2]
+    neg_sim = sim[neg_idx]
+    top_fail_neg = np.argsort(neg_sim)[:k]
+    # Positive pairs
+    pos_idx = labels == 1
+    pos_pairs = pairs[pos_idx, :2]
+    pos_sim = sim[pos_idx]
+    top_fail_pos = np.argsort(pos_sim)[-k:]
+
+    fail_indices = neg_pairs[top_fail_neg].flatten('F').tolist() + pos_pairs[top_fail_pos].flatten('F').tolist()
+    fail_sim = neg_sim[top_fail_neg].tolist() + pos_sim[top_fail_pos].tolist()
+    return fail_indices, fail_sim
+
+
 def evaluate_pairs(pair_file, features1, features2=None, kfold=10):
     if features2 is None:
         features2 = features1
@@ -18,7 +44,7 @@ def evaluate_pairs(pair_file, features1, features2=None, kfold=10):
     assert sim.shape[0] % kfold == 0
     k = int(sim.shape[0] / kfold)
     for i in range(kfold):
-        _, _, acc = roc_curve(labels[i*k: (i+1)*k], sim[i*k: (i+1)*k], thresholds)
+        _, _, acc = roc_curve(labels[i * k: (i + 1) * k], sim[i * k: (i + 1) * k], thresholds)
         scores.append(acc)
     scores = np.array(scores)
     scores = scores * 100
