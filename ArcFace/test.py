@@ -15,9 +15,10 @@ from mxnet.gluon.data import DataLoader
 from mxnet.gluon.data.vision import ImageRecordDataset
 
 from utils import helper
-from utils.evaluation import evaluate_pairs
+from utils.evaluation import evaluate_pairs, top_k_failure_pairs
 from ArcFace.resnet import resnet100
 from ArcFace.transforms import ToTensor
+from data.show_record import show_images
 
 
 def extract_features(inference, test_loader, ctx):
@@ -48,6 +49,13 @@ def eval_lfw(inference, test_rec, test_loader, ctx):
     pair_file = os.path.join(os.path.dirname(test_rec), 'lfw_pairs.txt')
     mu, std, t, accuracies = evaluate_pairs(pair_file, features)
     return mu, std, t, accuracies
+
+
+def top_failure_pairs_lfw(inference, test_rec, test_loader, ctx):
+    features, _ = extract_features(inference, test_loader, ctx)
+    pair_file = os.path.join(os.path.dirname(test_rec), 'lfw_pairs.txt')
+    failures = top_k_failure_pairs(pair_file, features)
+    return failures
 
 
 def evaluate():
@@ -85,6 +93,12 @@ def evaluate():
         logger.info(scout)
         accuracies = accuracies.tolist() + [mu, std]
         logger.info(' '.join('{:.2f}'.format(x) for x in accuracies))
+    elif args.test_name.lower() == 'lfw-failure':
+        print('Show LFW failure pairs...')
+        fail_indices, fail_sim = top_failure_pairs_lfw(inference, args.test_rec, test_loader, ctx)
+        images = mx.nd.stack(*[test_dataset[idx][0] for idx in fail_indices])
+        show_images(images, ncols=4)
+        logger.info(' '.join('{:.2f}'.format(x) for x in fail_sim))
 
 
 if __name__ == '__main__':
@@ -97,7 +111,7 @@ if __name__ == '__main__':
     parser.add_argument('--prefix', default='arcface', help='prefix')
     parser.add_argument('--model', default='shared/ArcFace/arcface-glint-nocolor-symbol.json',
                         help='pretrained model')
-    parser.add_argument('--test_name', default='lfw', help='name of the test set')
+    parser.add_argument('--test_name', default='lfw-failure', help='name of the test set')
     parser.add_argument('--test_rec', default='/mnt/Datasets/lfw/lfw_dlib_prnet.rec', help='test record')
 
     parser.add_argument('--emb_size', default=512, type=int, help='embedding size')
@@ -112,7 +126,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Output directories
-    args.log_dir, args.ckpt_dir = helper.create_output_dirs(args.output_dir, args.prefix)
+    args.log_dir, args.ckpt_dir = helper.create_output_dirs(args.output_dir, args.prefix, resume=True)
     logger = helper.create_logger(args.log_dir, args.prefix)
     logger.info(args)
 
