@@ -115,10 +115,10 @@ and unpack it to a directory, e.g., **/mnt/Datasets/lfw/images**
   
 ## Discussion
 **LFW**
-+ Top 4 hard positive pairs
++ Top 4 fail positive pairs
   ![lfw sample data](docs/lfw-fail-positive.png)
   <!-- .element height="50%" width="50%" -->
-+ Top 4 hard negative pairs
++ Top 4 fail negative pairs
   ![lfw sample data](docs/lfw-fail-negative.png)
   <!-- .element height="50%" width="50%" -->
 ## Licence

@@ -98,8 +98,8 @@ def evaluate():
         fail_indices, fail_sim = top_failure_pairs_lfw(inference, args.test_rec, test_loader, ctx)
         images = mx.nd.stack(*[test_dataset[idx][0] for idx in fail_indices])
         fail_sim_str = ['{:.2f}'.format(x) for x in fail_sim]
-        show_images(images[:8], titles=[''] * 4 + fail_sim_str[:4], ncols=4)
-        show_images(images[8:], titles=[''] * 4 + fail_sim_str[4:], ncols=4)
+        show_images(images[:10], titles=[''] * 5 + fail_sim_str[:5], ncols=5)
+        show_images(images[10:], titles=[''] * 5 + fail_sim_str[5:], ncols=5)
         logger.info(' '.join(fail_sim_str))
 
 

@@ -2,7 +2,7 @@ import numpy as np
 from scipy.spatial.distance import cosine
 
 
-def top_k_failure_pairs(pair_file, features1, features2=None, k=4):
+def top_k_failure_pairs(pair_file, features1, features2=None, k=5):
     if features2 is None:
         features2 = features1
     # Read pairs and labels
@@ -16,15 +16,15 @@ def top_k_failure_pairs(pair_file, features1, features2=None, k=4):
     neg_idx = labels == 0
     neg_pairs = pairs[neg_idx, :2]
     neg_sim = sim[neg_idx]
-    top_fail_neg = np.argsort(neg_sim)[:k]
+    top_fail_pos = np.argsort(neg_sim)[:k]
     # Positive pairs
     pos_idx = labels == 1
     pos_pairs = pairs[pos_idx, :2]
     pos_sim = sim[pos_idx]
-    top_fail_pos = np.argsort(pos_sim)[-k:]
+    top_fail_neg = np.argsort(pos_sim)[-k:]
 
-    fail_indices = neg_pairs[top_fail_neg].flatten('F').tolist() + pos_pairs[top_fail_pos].flatten('F').tolist()
-    fail_sim = neg_sim[top_fail_neg].tolist() + pos_sim[top_fail_pos].tolist()
+    fail_indices = neg_pairs[top_fail_pos].flatten('F').tolist() + pos_pairs[top_fail_neg].flatten('F').tolist()
+    fail_sim = neg_sim[top_fail_pos].tolist() + pos_sim[top_fail_neg].tolist()
     return fail_indices, fail_sim
 
 
