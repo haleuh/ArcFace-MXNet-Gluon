@@ -95,12 +95,12 @@ def evaluate():
         logger.info(' '.join('{:.2f}'.format(x) for x in accuracies))
     elif args.test_name.lower() == 'lfw-failure':
         print('Show LFW failure pairs...')
-        fail_indices, fail_sim = top_failure_pairs_lfw(inference, args.test_rec, test_loader, ctx)
-        images = mx.nd.stack(*[test_dataset[idx][0] for idx in fail_indices])
-        fail_sim_str = ['{:.2f}'.format(x) for x in fail_sim]
-        show_images(images[:10], titles=[''] * 5 + fail_sim_str[:5], ncols=5)
-        show_images(images[10:], titles=[''] * 5 + fail_sim_str[5:], ncols=5)
-        logger.info(' '.join(fail_sim_str))
+        false_indices, false_sim = top_failure_pairs_lfw(inference, args.test_rec, test_loader, ctx)
+        images = mx.nd.stack(*[test_dataset[idx][0] for idx in false_indices])
+        false_sim_str = ['{:.2f}'.format(x) for x in false_sim]
+        show_images(images[:10], titles=[''] * 5 + false_sim_str[:5], ncols=5)
+        show_images(images[10:], titles=[''] * 5 + false_sim_str[5:], ncols=5)
+        logger.info(' '.join(false_sim_str))
 
 
 if __name__ == '__main__':
