@@ -2,7 +2,7 @@ import numpy as np
 from scipy.spatial.distance import cosine
 
 
-def top_k_failure_pairs(pair_file, features1, features2=None, k=5):
+def top_pairs(pair_file, features1, features2=None, k=5):
     if features2 is None:
         features2 = features1
     # Read pairs and labels
@@ -12,20 +12,27 @@ def top_k_failure_pairs(pair_file, features1, features2=None, k=5):
     labels = pairs[:, 2]
     # Compare feature pairs
     sim = compare_pairs(features1[f1, :], features2[f2, :])
-    # Negative pairs
-    neg_idx = labels == 0
-    neg_pairs = pairs[neg_idx, :2]
-    neg_sim = sim[neg_idx]
-    top_false_pos = np.argsort(neg_sim)[:k]
     # Positive pairs
     pos_idx = labels == 1
     pos_pairs = pairs[pos_idx, :2]
     pos_sim = sim[pos_idx]
-    top_false_neg = np.argsort(pos_sim)[-k:]
-
-    false_indices = neg_pairs[top_false_pos].flatten('F').tolist() + pos_pairs[top_false_neg].flatten('F').tolist()
-    false_sim = neg_sim[top_false_pos].tolist() + pos_sim[top_false_neg].tolist()
-    return false_indices, false_sim
+    arg_sort_pos_sim = np.argsort(pos_sim)
+    top_true_pos = pos_pairs[arg_sort_pos_sim[:k]].flatten('F')
+    top_true_pos_sim = pos_sim[arg_sort_pos_sim[:k]]
+    top_false_neg = pos_pairs[arg_sort_pos_sim[-k:]].flatten('F')
+    top_false_neg_sim = pos_sim[arg_sort_pos_sim[-k:]]
+    # Negative pairs
+    neg_idx = labels == 0
+    neg_pairs = pairs[neg_idx, :2]
+    neg_sim = sim[neg_idx]
+    arg_sort_neg_sim = np.argsort(neg_sim)
+    top_true_neg = neg_pairs[arg_sort_neg_sim[-k:]].flatten('F')
+    top_true_neg_sim = neg_sim[arg_sort_neg_sim[-k:]]
+    top_false_pos = neg_pairs[arg_sort_neg_sim[:k]].flatten('F')
+    top_false_pos_sim = neg_sim[arg_sort_neg_sim[:k]]
+    indices = np.hstack([top_true_pos, top_true_neg, top_false_pos, top_false_neg]).tolist()
+    sim = np.hstack([top_true_pos_sim, top_true_neg_sim, top_false_pos_sim, top_false_neg_sim]).tolist()
+    return indices, sim
 
 
 def evaluate_pairs(pair_file, features1, features2=None, kfold=10):

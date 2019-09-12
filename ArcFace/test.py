@@ -15,7 +15,7 @@ from mxnet.gluon.data import DataLoader
 from mxnet.gluon.data.vision import ImageRecordDataset
 
 from utils import helper
-from utils.evaluation import evaluate_pairs, top_k_failure_pairs
+from utils.evaluation import evaluate_pairs, top_pairs
 from ArcFace.resnet import resnet100
 from ArcFace.transforms import ToTensor
 from data.show_record import show_images
@@ -54,7 +54,7 @@ def eval_lfw(inference, test_rec, test_loader, ctx):
 def top_failure_pairs_lfw(inference, test_rec, test_loader, ctx):
     features, _ = extract_features(inference, test_loader, ctx)
     pair_file = os.path.join(os.path.dirname(test_rec), 'lfw_pairs.txt')
-    failures = top_k_failure_pairs(pair_file, features)
+    failures = top_pairs(pair_file, features)
     return failures
 
 
@@ -94,13 +94,13 @@ def evaluate():
         accuracies = accuracies.tolist() + [mu, std]
         logger.info(' '.join('{:.2f}'.format(x) for x in accuracies))
     elif args.test_name.lower() == 'lfw-failure':
-        print('Show LFW failure pairs...')
-        false_indices, false_sim = top_failure_pairs_lfw(inference, args.test_rec, test_loader, ctx)
-        images = mx.nd.stack(*[test_dataset[idx][0] for idx in false_indices])
-        false_sim_str = ['{:.2f}'.format(x) for x in false_sim]
-        show_images(images[:10], titles=[''] * 5 + false_sim_str[:5], ncols=5)
-        show_images(images[10:], titles=[''] * 5 + false_sim_str[5:], ncols=5)
-        logger.info(' '.join(false_sim_str))
+        print('Show LFW pairs...')
+        indices, sim = top_failure_pairs_lfw(inference, args.test_rec, test_loader, ctx)
+        images = mx.nd.stack(*[test_dataset[idx][0] for idx in indices])
+        sim_str = ['{:.2f}'.format(x) for x in sim]
+        for idx in range(4):
+            show_images(images[idx * 10:(idx + 1) * 10], titles=[''] * 5 + sim_str[idx * 5:(idx + 1) * 5], ncols=5)
+        logger.info(' '.join(sim_str))
 
 
 if __name__ == '__main__':
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     parser.add_argument('--prefix', default='arcface', help='prefix')
     parser.add_argument('--model', default='shared/ArcFace/arcface-glint-nocolor-symbol.json',
                         help='pretrained model')
-    parser.add_argument('--test_name', default='lfw-failure', help='name of the test set')
+    parser.add_argument('--test_name', default='lfw', help='name of the test set')
     parser.add_argument('--test_rec', default='/mnt/Datasets/lfw/lfw_dlib_prnet.rec', help='test record')
 
     parser.add_argument('--emb_size', default=512, type=int, help='embedding size')

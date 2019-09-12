@@ -111,10 +111,16 @@ and unpack it to a directory, e.g., **/mnt/Datasets/lfw/images**
 
   | Test set | Accuracy |
   |:--------:|:--------:|
-  | LFW |  99.85 ± 0.22 |
+  | LFW |  99.85 ± 0.20 |
   
 ## Discussion
 **LFW**
++ Top 5 true positive pairs
+  ![lfw true_positive_pairs](docs/lfw-true-positive.png)
+  <!-- .element height="50%" width="50%" -->
++ Top 5 true negative pairs
+  ![lfw true_negative_pairs](docs/lfw-true-negative.png)
+  <!-- .element height="50%" width="50%" -->
 + Top 5 false positive pairs
   ![lfw false_positive_pairs](docs/lfw-false-positive.png)
   <!-- .element height="50%" width="50%" -->

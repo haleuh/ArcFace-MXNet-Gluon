@@ -29,7 +29,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # output
     parser.add_argument('--output', default='shared/ArcFace/arcface-glint-nocolor', help='output model')
-    parser.add_argument('--model', default='shared/ArcFace/arcface-glint-nocolor-best-337551.params',
+    parser.add_argument('--model', default='shared/ArcFace/arcface-glint-nocolor-best-172367.params',
                         help='pretrained model')
     parser.add_argument('--img_size', default='112,112', type=str, help='image size')
     parser.add_argument('--emb_size', default=512, type=int, help='embedding size')
